@@ -1,0 +1,23 @@
+{
+  "name": "shmup",
+  "version": "1.0.0",
+  "description": "Shoot-em-up for FIT2 final project",
+  "main": "game.js",
+  "dependencies": {
+    "phaser": "^3.18.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ronasuti/SHMUP.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ronasuti/SHMUP/issues"
+  },
+  "homepage": "https://github.com/ronasuti/SHMUP#readme"
+}

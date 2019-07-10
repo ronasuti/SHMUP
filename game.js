@@ -6,7 +6,7 @@ var config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 0 },
-            debug: false
+            debug: true
         }
     },
     scene: {
@@ -15,20 +15,21 @@ var config = {
         update: update
     }
 };
-
+//shooting characteristics
+var fireTimer;
+var fireDelay = 25; //milliseconds
+var canFire = true;
 var player;
 var platforms;
 var cursors;
 var KeyShift;
+var speed;
 var game = new Phaser.Game(config);
 var bullets;
-
 function preload ()
 {
     this.load.image('bg', 'assets/bg.png');
-    this.load.image('ground', 'assets/platform.png');
-    this.load.image('tate', 'assets/tate.png');
-    this.load.spritesheet('jiki', 'assets/jiki.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('jiki', 'assets/jiki.png', { frameWidth: 12, frameHeight: 28 });
     this.load.image('bullet', 'assets/bullet.png');
 }
 
@@ -38,11 +39,7 @@ function create ()
 
     platforms = this.physics.add.staticGroup();
     player = this.physics.add.sprite(100, 450, 'jiki');
-    platforms.create(400, 731, 'ground').setScale(2).refreshBody();
-    platforms.create(0.0001, 300, 'tate').setScale(2).refreshBody();
-    platforms.create(615, 300, 'tate').setScale(2).refreshBody();
-    player.setBounce(0.2);
-    player.setDrag(0.99);
+    player.setCollideWorldBounds(true);
     var Bullet = new Phaser.Class({
         Extends: Phaser.GameObjects.Image,
         initialize:
@@ -74,7 +71,7 @@ function create ()
     });
     bullets = this.add.group({
         classType: Bullet,
-        maxSize: 10,
+        maxSize: 120,
         runChildUpdate: true
     });
     this.anims.create({
@@ -95,39 +92,45 @@ function create ()
         repeat: -1
     });
     cursors = this.input.keyboard.createCursorKeys();
-    this.physics.add.collider(player,platforms);
+    shootBullets = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+    useBomb = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+
+    //player params. This is half the real speed.
+    speed = 200;
 }
 
 function update ()
 {
-    if (cursors.left.isDown)
-    {
-        player.setVelocityX(-160);
-
-
+    let angle = 0;
+    //movement inputs
+    if (cursors.left.isDown) {
+        if (cursors.up.isDown) {            UpperLeft}
+        else if (cursors.down.isDown) {     LowerLeft}
+        else {                              Left}
     }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityX(160);
-
-
+    else if (cursors.right.isDown) {
+        if (cursors.up.isDown) {            UpperRight}
+        else if (cursors.down.isDown) {     LowerRight}
+        else {                              Right}
     }
-    else
-    {
-        player.setVelocityX(0);
+    else {
+        if (cursors.up.isDown) {            Up}
+        else if (cursors.down.isDown) {     Down}
+        else {                              None}
+    }
+    //action inputs
+    if (shootBullets.isDown) {
+        var bullet = bullets.get();
+        if (bullet) {
+            if (canFire) {
+                bullet.fire(player.x, player.y);
+                canFire = false;
+                fireTimer = this.time.delayedCall(fireDelay, fireEvent,[], this);
+            }
+        }
+    }
+}
 
-
-    }
-
-    if (cursors.up.isDown)
-    {
-        player.setVelocityY(-160);
-    }
-    else if (cursors.down.isDown)
-    {
-        player.setVelocityY(160);
-    }
-    else{
-      player.setVelocityY(0);
-    }
+function fireEvent () {
+    canFire = true;
 }

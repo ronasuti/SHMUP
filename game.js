@@ -101,23 +101,16 @@ function create ()
 
 function update ()
 {
-    let angle = 0;
-    //movement inputs
-    if (cursors.left.isDown) {
-        if (cursors.up.isDown) {            UpperLeft}
-        else if (cursors.down.isDown) {     LowerLeft}
-        else {                              Left}
-    }
-    else if (cursors.right.isDown) {
-        if (cursors.up.isDown) {            UpperRight}
-        else if (cursors.down.isDown) {     LowerRight}
-        else {                              Right}
-    }
-    else {
-        if (cursors.up.isDown) {            Up}
-        else if (cursors.down.isDown) {     Down}
-        else {                              None}
-    }
+    let xVel = 0; yVel = 0;
+    //movement inputs, handles diagonal velocity mostly correctly
+    //using a simplified heuristic (*0.707) for speed
+    if (cursors.left.isDown) {  xVel-=speed;}
+    if (cursors.right.isDown) { xVel+=speed;}
+    if (cursors.up.isDown) {    yVel-=speed;}
+    if (cursors.down.isDown) {  yVel=speed;}
+    if (xVel!==0 && yVel!==0) { player.setVelocity(xVel*0.707, yVel*0.707);}
+    else {                      player.setVelocity(xVel, yVel);}
+
     //action inputs
     if (shootBullets.isDown) {
         var bullet = bullets.get();

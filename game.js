@@ -31,14 +31,16 @@ function preload ()
     this.load.image('bg', 'assets/bg.png');
     this.load.spritesheet('jiki', 'assets/jiki.png', { frameWidth: 12, frameHeight: 28 });
     this.load.image('bullet', 'assets/bullet.png');
+    this.load.image('teki', 'assets/teki.png');
 }
 
 function create ()
 {
     this.add.image(295,350, 'bg');
-
     platforms = this.physics.add.staticGroup();
     player = this.physics.add.sprite(100, 450, 'jiki');
+    enemy1=this.physics.add.sprite(75, 150, 'teki');
+    enemy2=this.physics.add.sprite(475, 150, 'teki');
     player.setCollideWorldBounds(true);
     var Bullet = new Phaser.Class({
         Extends: Phaser.GameObjects.Image,
@@ -97,6 +99,9 @@ function create ()
 
     //player params. This is half the real speed.
     speed = 200;
+    this.physics.add.overlap(player, enemy1);
+    this.physics.add.overlap(bullets,enemy1);
+    this.physics.add.overlap(enemy2, bullets);
 }
 
 function update ()
@@ -126,4 +131,8 @@ function update ()
 
 function fireEvent () {
     canFire = true;
+}
+function destroyenemy(enemy1,enemy2){
+  enemy1.destroy();
+  enemy2.destroy();
 }

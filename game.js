@@ -41,7 +41,6 @@ function create ()
     player = this.physics.add.sprite(100, 450, 'jiki');
     enemy1=this.physics.add.sprite(75, 150, 'teki');
     enemy2=this.physics.add.sprite(475, 150, 'teki');
-    bullet1=this.physics.add.sprite('bullet');
     player.setCollideWorldBounds(true);
     var Bullet = new Phaser.Class({
         Extends: Phaser.GameObjects.Image,
@@ -49,7 +48,6 @@ function create ()
         function Bullet (scene)
         {
             Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
-
             this.speed = Phaser.Math.GetSpeed(400, 1);
         },
 
@@ -104,7 +102,7 @@ function create ()
     this.physics.add.overlap(player,enemy1,destroyplayer);
     this.physics.world.enable([ player, enemy2 ]);
     this.physics.add.overlap(player,enemy2,destroyplayer);
-    this.physics.world.enable([ enemy1, bullets ]);
+    this.physics.world.enable([ enemy1, bullet1 ]);
     this.physics.add.overlap(enemy1,bullet1,destroyenemy1);
 }
 
@@ -146,6 +144,6 @@ function destroyenemy1(enemy1){
   enemy1.setVisible(false);
 
 }
-function destroyenemy2(enemy1){
+function destroyenemy2(enemy2){
   enemy2.setVisible(false);
 }

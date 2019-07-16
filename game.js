@@ -6,7 +6,7 @@ var config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 0 },
-            debug: true
+            debug: false
         }
     },
     scene: {
@@ -17,10 +17,9 @@ var config = {
 };
 //shooting characteristics
 var fireTimer;
-var fireDelay = 25; //milliseconds
+var fireDelay = 250; //milliseconds
 var canFire = true;
 var player;
-var platforms;
 var cursors;
 var KeyShift;
 var speed;
@@ -37,7 +36,6 @@ function preload ()
 function create ()
 {
     this.add.image(295,350, 'bg');
-    platforms = this.physics.add.staticGroup();
     player = this.physics.add.sprite(100, 450, 'jiki');
     enemy1=this.physics.add.sprite(75, 150, 'teki');
     enemy2=this.physics.add.sprite(475, 150, 'teki');
@@ -53,7 +51,7 @@ function create ()
 
         fire: function (x, y)
         {
-            this.setPosition(x, y - 50);
+            this.setPosition(x, y - 5);
 
             this.setActive(true);
             this.setVisible(true);
@@ -70,7 +68,7 @@ function create ()
             }
         }
     });
-    bullets = this.add.group({
+    bullets = this.physics.add.group({
         classType: Bullet,
         maxSize: 120,
         runChildUpdate: true
@@ -102,15 +100,17 @@ function create ()
     this.physics.add.overlap(player,enemy1,destroyplayer);
     this.physics.world.enable([ player, enemy2 ]);
     this.physics.add.overlap(player,enemy2,destroyplayer);
-    this.physics.world.enable([ enemy1, bullet1 ]);
-    this.physics.add.overlap(enemy1,bullet1,destroyenemy1);
+    this.physics.world.enable([ enemy1, bullets ]);
+    this.physics.world.enable([enemy2, bullets]);
+    this.physics.add.collider(enemy1,bullets,destroyenemy);
+    this.physics.add.collider(enemy2,bullets,destroyenemy);
 }
 
 
 
 function update ()
 {
-    let xVel = 0; yVel = 0;
+    let xVel = 0; let yVel = 0;
     //movement inputs, handles diagonal velocity mostly correctly
     //using a simplified heuristic (*0.707) for speed
     if (cursors.left.isDown) {  xVel-=speed;}
@@ -140,10 +140,7 @@ function destroyplayer(player){
   player.setVisible(false);
   canFire=false;
 }
-function destroyenemy1(enemy1){
-  enemy1.setVisible(false);
-
-}
-function destroyenemy2(enemy2){
-  enemy2.setVisible(false);
+function destroyenemy(enemyHit, bulletHit){
+  enemyHit.destroy();
+  bulletHit.destroy();
 }

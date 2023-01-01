@@ -4,7 +4,7 @@
   "description": "Shoot-em-up for FIT2 final project",
   "main": "game.js",
   "dependencies": {
-    "phaser": "^3.18.1"
+    "phaser": "^3.55.2"
   },
   "devDependencies": {},
   "scripts": {
